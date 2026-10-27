@@ -65,24 +65,24 @@ sequenceDiagram
     participant API as FastAPI Backend
     participant Store as DataStore Snapshot
 
-    Trader->>UI: Select Delivery Date D (e.g. 2026-01-05) & Cutoff (09:00 London)
+    Trader->>UI: Select Delivery Date D and Cutoff (09:00 London)
     UI->>API: GET /api/forecast/at-decision?delivery_date=2026-01-05&cutoff=09:00
-    API->>API: Parse delivery_date; Compute decision cutoff in UTC: C = 2026-01-04T09:00:00Z
-    loop For each hour T in [00:00, 01:00, ... 23:00] on Day D
-        API->>Store: Get all candidate forecasts for startTime == T
-        API->>API: Filter candidates: publishTime <= C
+    API->>API: Parse delivery date and compute UTC cutoff (2026-01-04 09:00 UTC)
+    loop For each hour T across Day D (00:00 to 23:00)
+        API->>Store: Get candidate forecasts for target hour T
+        API->>API: Filter candidates where publishTime <= Cutoff
         alt Eligible forecasts exist
-            API->>API: Select argmax(publishTime)
-            API->>API: Calculate horizon: (T - publishTime) in hours
+            API->>API: Select latest forecast (argmax publishTime)
+            API->>API: Compute horizon (T minus publishTime in hours)
         else No forecast published before cutoff
-            API->>API: Mark forecast as None (Missing)
+            API->>API: Mark forecast as missing (None)
         end
-        API->>Store: Get actual generation for hour T: Mean(Actual(T:00), Actual(T:30))
-        API->>API: Calculate Error: Error = Forecast - Actual
+        API->>Store: Get hourly actual generation (mean of :00 and :30 outturns)
+        API->>API: Compute error (Forecast minus Actual)
     end
-    API->>API: Compute Day KPIs (Expected MWh, Peak MW, Min MW, MAE, Missing Periods)
-    API-->>UI: Return 24 hourly periods + Day KPIs
-    UI-->>Trader: Render interactive Forecast vs Actual chart & KPIs
+    API->>API: Compute Day KPIs (Expected MWh, Peak MW, MAE, Missing Count)
+    API-->>UI: Return 24 hourly periods and Day KPIs
+    UI-->>Trader: Render interactive Forecast vs Actual chart and KPIs
 ```
 
 ---
