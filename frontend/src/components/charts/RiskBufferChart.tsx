@@ -1,5 +1,5 @@
 import {
-  AreaChart,
+  ComposedChart,
   Area,
   Line,
   XAxis,
@@ -29,7 +29,7 @@ export function RiskBufferChart({ periods, bufferMw }: RiskBufferChartProps) {
   return (
     <div className="w-full h-80">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
+        <ComposedChart data={chartData} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
           <defs>
             <linearGradient id="bufferGradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4} />
@@ -105,6 +105,7 @@ export function RiskBufferChart({ periods, bufferMw }: RiskBufferChartProps) {
             stroke="#f59e0b"
             strokeWidth={2.5}
             dot={{ r: 2 }}
+            connectNulls
           />
           <Line
             type="monotone"
@@ -114,8 +115,9 @@ export function RiskBufferChart({ periods, bufferMw }: RiskBufferChartProps) {
             strokeWidth={2}
             strokeDasharray="4 4"
             dot={{ r: 2 }}
+            connectNulls
           />
-        </AreaChart>
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   );

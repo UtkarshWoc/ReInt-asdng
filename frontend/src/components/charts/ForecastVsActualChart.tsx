@@ -1,5 +1,5 @@
 import {
-  AreaChart,
+  ComposedChart,
   Area,
   Line,
   XAxis,
@@ -33,7 +33,7 @@ export function ForecastVsActualChart({ periods }: ForecastVsActualChartProps) {
   return (
     <div className="w-full h-80 sm:h-96">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart
+        <ComposedChart
           data={chartData}
           margin={{ top: 10, right: 30, left: 10, bottom: 0 }}
         >
@@ -124,11 +124,12 @@ export function ForecastVsActualChart({ periods }: ForecastVsActualChartProps) {
             dataKey="actual"
             name="Actual Outturn (Hindsight)"
             stroke="#0ea5e9"
-            strokeWidth={2}
+            strokeWidth={2.5}
             strokeDasharray="4 4"
             dot={{ r: 3, fill: "#0ea5e9" }}
+            connectNulls
           />
-        </AreaChart>
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   );
