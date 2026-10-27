@@ -9,7 +9,7 @@ import {
   RiskBufferResponse,
 } from "../types";
 
-const API_BASE = import.meta.env.VITE_API_URL || "";
+const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
 
 async function fetchJson<T>(url: string): Promise<T> {
   const fullUrl = `${API_BASE}${url}`;
@@ -24,6 +24,15 @@ async function fetchJson<T>(url: string): Promise<T> {
     }
     throw new Error(errMessage);
   }
+
+  const contentType = res.headers.get("content-type") || "";
+  if (!contentType.includes("application/json")) {
+    const preview = await res.text();
+    throw new Error(
+      `Received non-JSON response from API (${contentType}): ${preview.slice(0, 120)}`
+    );
+  }
+
   return res.json() as Promise<T>;
 }
 
