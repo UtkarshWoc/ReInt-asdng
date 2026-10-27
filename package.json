@@ -1,0 +1,10 @@
+{
+  "name": "uk-wind-forecast-monorepo",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "build": "npm --workspace=frontend run build"
+  }
+}
