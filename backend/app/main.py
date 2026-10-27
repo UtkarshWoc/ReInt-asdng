@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.routers import health
+from app.routers import accuracy, forecasts, health, meta
 
 app = FastAPI(
     title="UK Wind Generation Day-Ahead Decision Support API",
@@ -29,6 +29,9 @@ app.add_middleware(
 
 # Include Routers
 app.include_router(health.router, prefix="/api")
+app.include_router(meta.router, prefix="/api")
+app.include_router(forecasts.router, prefix="/api")
+app.include_router(accuracy.router, prefix="/api")
 
 
 @app.get("/")
@@ -37,4 +40,5 @@ def root():
         "project": "UK Wind Generation Day-Ahead Decision Support",
         "documentation": "/docs",
         "health": "/api/health",
+        "meta": "/api/meta",
     }
