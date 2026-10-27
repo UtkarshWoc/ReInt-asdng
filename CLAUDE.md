@@ -2,8 +2,8 @@
 
 ## 1. Operating Identity & Anonymity
 - **Git identity:**
-  - `user.name = anon-dev`
-  - `user.email = anon-dev@users.noreply.github.com`
+  - `user.name = Utkarsh Shukla`
+  - `user.email = utkarshshukla24.08@gmail.com`
 - **Strict Anonymity:** Never include any real personal names, emails, company/employer names, or university references in any file, comment, commit, or pull request.
 
 ## 2. Domain & Business Rules
