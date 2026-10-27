@@ -18,9 +18,25 @@ class Settings:
     def cors_origins(self) -> list[str]:
         return [origin.strip() for origin in self.CORS_ORIGINS_RAW.split(",") if origin.strip()]
 
-    # Snapshot location: default to data/jan_2026_snapshot.json relative to backend root
+    # Snapshot location: robust resolution across local, Docker, and Vercel serverless
     BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
-    DATA_SNAPSHOT_PATH: Path = BASE_DIR / os.getenv("DATA_SNAPSHOT_PATH", "data/jan_2026_snapshot.json")
+
+    @property
+    def DATA_SNAPSHOT_PATH(self) -> Path:
+        raw = os.getenv("DATA_SNAPSHOT_PATH", "data/jan_2026_snapshot.json")
+        candidate = Path(raw)
+        if candidate.is_absolute() and candidate.exists():
+            return candidate
+        # 1. Relative to backend directory (standard)
+        if (self.BASE_DIR / raw).exists():
+            return self.BASE_DIR / raw
+        # 2. Relative to workspace root
+        if (self.BASE_DIR.parent / raw).exists():
+            return self.BASE_DIR.parent / raw
+        # 3. If raw included 'data/...' but from root
+        if (self.BASE_DIR / "data" / "jan_2026_snapshot.json").exists():
+            return self.BASE_DIR / "data" / "jan_2026_snapshot.json"
+        return self.BASE_DIR / raw
 
 
 settings = Settings()

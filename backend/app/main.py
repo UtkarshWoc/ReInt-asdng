@@ -27,11 +27,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include Routers
+# Include Routers with /api prefix (standard Docker and local dev)
 app.include_router(health.router, prefix="/api")
 app.include_router(meta.router, prefix="/api")
 app.include_router(forecasts.router, prefix="/api")
 app.include_router(accuracy.router, prefix="/api")
+
+# Also include Routers without /api prefix (for serverless environments where /api is stripped by proxy)
+app.include_router(health.router)
+app.include_router(meta.router)
+app.include_router(forecasts.router)
+app.include_router(accuracy.router)
 
 
 @app.get("/")
