@@ -5,6 +5,6 @@
     "frontend"
   ],
   "scripts": {
-    "build": "npm --workspace=frontend run build"
+    "build": "npm --workspace=frontend run build && node -e \"const fs = require('fs'); if (fs.existsSync('frontend/dist')) fs.cpSync('frontend/dist', 'dist', { recursive: true });\""
   }
 }
